@@ -1,22 +1,48 @@
-let usersForNotifications = []; // Store email addresses for notifications
+// functions/save-email.js
 
-// Endpoint to save the email
-app.post("/save-email", (req, res) => {
+let usersForNotifications = []; // Store email addresses for notifications (in-memory)
+
+exports.handler = async function (event, context) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ message: "Method Not Allowed" }),
+    };
+  }
+
   try {
-    const { email } = req.body; // Get the email from the request body
-    if (!email) {
-      return res.status(400).send({ message: "Invalid email address." });
+    const { email } = JSON.parse(event.body); // Get the email from the request body
+
+    // Validate email
+    if (!email || !validateEmail(email)) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "Invalid email address." }),
+      };
     }
 
-    // Save the email in your database or in-memory array (for simplicity, we're using an array here)
+    // Save the email in the array
     usersForNotifications.push(email);
 
-    // Send a success response
-    res
-      .status(200)
-      .send({ success: true, message: "Email saved successfully!" });
+    // Return a success response
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "Email saved successfully!",
+      }),
+    };
   } catch (error) {
     console.error("Error saving email:", error);
-    res.status(500).send({ message: "Error saving email." });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Error saving email.", error: error.message }),
+    };
   }
-});
+};
+
+// Helper function to validate the email format
+function validateEmail(email) {
+  const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  return re.test(email);
+}
