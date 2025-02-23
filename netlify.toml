@@ -1,6 +1,0 @@
-[build]
-  functions = "functions"  # This points to the directory containing your functions
-  publish = "public"       # The folder where your static files are located (HTML, CSS, etc.)
-
-[dev]
-  functions = "functions"
