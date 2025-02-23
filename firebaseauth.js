@@ -29,9 +29,7 @@
     event.preventDefault();
     const email=document.getElementById('rEmail').value;
     const password=document.getElementById('rPassword').value;
-    const firstName=document.getElementById('fName').value;
-    const lastName=document.getElementById('lName').value;
-
+   
     const auth=getAuth();
     const db=getFirestore();
 
@@ -39,9 +37,8 @@
     .then((userCredential)=>{
         const user=userCredential.user;
         const userData={
-            email: email,
-            firstName: firstName,
-            lastName:lastName
+            email: email
+           
         };
         showMessage('Account Created Successfully', 'signUpMessage');
         const docRef=doc(db, "users", user.uid);
