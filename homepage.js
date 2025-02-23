@@ -3,8 +3,12 @@ import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/fire
 import{getFirestore, getDoc, doc} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"
 
 const firebaseConfig = {
-    //YOUR COPIED FIREBASE PART SHOULD BE HERE
- //WATCH THIS VIDEO TO LEARN WHAT TO PUT HERE   https://youtu.be/_Xczf06n6x0
+  apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
+    authDomain: "peer-tutor-a1076.firebaseapp.com",
+    projectId: "peer-tutor-a1076",
+    storageBucket: "peer-tutor-a1076.firebasestorage.app",
+    messagingSenderId: "677806357185",
+    appId: "1:677806357185:web:be5149be7ba68343517240"
   };
  
   // Initialize Firebase
