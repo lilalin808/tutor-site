@@ -8,14 +8,6 @@
   </head>
   <body>
     <div id="notification-settings">
-      <label for="email">Enter your email to receive notifications:</label>
-      <input
-        type="email"
-        id="email"
-        placeholder="Your email address"
-        required
-      />
-      <button onclick="submitEmail()">Submit</button>
       <script>
         window.submitEmail = async function () {
     const email = document.getElementById("email").value;
@@ -74,6 +66,15 @@
   }
 
       </script>
+      <label for="email">Enter your email to receive notifications:</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="Your email address"
+        required
+      />
+      <button onclick="submitEmail()">Submit</button>
+      
     </div>
     <div class="container">
       <h1>Tutor Dashboard</h1>
