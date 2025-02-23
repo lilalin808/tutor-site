@@ -1,53 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
-    <style>
-        body{
-            padding:30px;
-            background:linear-gradient(to right, #e2e2e2, #c9d6ff);
-        }
-        h1{
-            text-align:center;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homework Help</title>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <div class="container" id="signupContainer">
+      <h2>Sign Up</h2>
+      <form id="signupForm">
+        <input type="email" id="email" placeholder="Email" />
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+    <script>
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault(); // Prevent form submission
 
-        }
-        button{
-            color:blueviolet;
-            background-color:#c9d6ff;
-            padding:5px;
-            border-radius:5px;
-            font-size:1rem;
-            font-weight:bold;
-            border:none;
-        }
-        button:hover{
-            text-decoration: underline;
-            color:blue;
-        }
-        button, div{
-            margin-left:15%;
-            font-size:20px;
-            padding:10px;
-        }
-        div{
-            font-weight:400;
-            color:rgb(12,11,11);
+          const email = document.getElementById("email").value;
 
-        }
-        span{
-            font-weight:600;
-            font-size:22px;
-            color:black;
-        }
-    </style>
-    <script type="module" src="./homepage.js"></script>
-</head>
-<body>
-    <h1>Welcome to the Homepage</h1>
-   
-    <div>Email: <span id="loggedUserEmail"></span></div>
-    <button id="logout">Logout</button>
-</body>
+          if (!email) {
+            alert("Email and password are required!");
+            return;
+          }
+
+          try {
+            const response = await fetch("http://localhost:5001/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Store the JWT token in localStorage (you can also use sessionStorage)
+              localStorage.setItem("authToken", data.token);
+
+              // Redirect to a protected page (e.g., dashboard)
+              window.location.href = "/index.html";
+            } else {
+              alert(data.message);
+            }
+          } catch (error) {
+            console.error("Error during signup:", error);
+            alert("Signup failed. Please try again.");
+          }
+        });
+    </script>
+    <div class="container" id="loginContainer">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" />
+        <button type="submit">Login</button>
+      </form>
+      <script>
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            const email = document.getElementById("loginEmail").value;
+
+            try {
+              const response = await fetch("http://localhost:5001/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email }),
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                // Store the JWT token in localStorage (you can also use sessionStorage)
+                localStorage.setItem("authToken", data.token);
+                localStorage.setItem("currentUserId", data.userId);
+                // Redirect to a protected page (e.g., dashboard)
+                window.location.href = "/dashboard.html";
+              } else {
+                alert(data.message);
+              }
+            } catch (error) {
+              console.error("Error during login:", error);
+              alert("Login failed. Please try again.");
+            }
+          });
+      </script>
+    </div>
+
+    <div class="container" id="signupContainer" style="display: none">
+      <h2>Sign Up</h2>
+      <input type="email" id="signupEmail" placeholder="Email" />
+      <button onclick="signup()">Sign Up</button>
+      <p class="toggle">
+        Already have an account? <a href="#" onclick="toggleForms()">Login</a>
+      </p>
+    </div>
+    <div class="container">
+      <h1>Homework Help</h1>
+      <form id="questionForm">
+        <label for="question">Enter your homework question:</label>
+        <textarea id="question" name="question" rows="4" required></textarea>
+        <button type="submit" id="submit">Submit Question</button>
+      </form>
+    </div>
+    <h2>Submitted Questions</h2>
+    <!-- For displaying the user's own questions -->
+    <p>my questions</p>
+    <div id="myQuestionsContainer"></div>
+
+    <!-- For displaying other users' questions -->
+
+    <!-- For displaying all questions on the dashboard -->
+    <div class="container">
+      <p>all questions</p>
+      <div id="allQuestionsContainer">all questions</div>
+    </div>
+    <script src="scripts/main.js"></script>
+  </body>
 </html>
