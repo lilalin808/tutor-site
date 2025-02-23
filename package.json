@@ -1,4 +1,16 @@
 {
+  "name": "netlify-functions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "nodemailer": "^6.7.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "echo 'Building...'",
+    "deploy": "netlify deploy"
+ 
+{
   "name": "tutor",
   "version": "1.0.0",
   "main": "index.js",
