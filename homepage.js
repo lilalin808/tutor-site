@@ -1,7 +1,9 @@
 // Initialize Firebase before calling any Firebase services
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
   authDomain: "peer-tutor-a1076.firebaseapp.com",
@@ -13,17 +15,12 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);  // Ensure db is initialized using the app instance
-
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-
-// Initialize Firebase
-const auth = getAuth();
+const db = getFirestore(app); // Firestore instance
+const auth = getAuth(); // Auth instance
 
 // Function to show messages to the user
 function showMessage(message, divId) {
-  var messageDiv = document.getElementById(divId);
+  const messageDiv = document.getElementById(divId);
   messageDiv.style.display = "block";
   messageDiv.innerHTML = message;
   messageDiv.style.opacity = 1;
@@ -72,25 +69,24 @@ questionForm.addEventListener('submit', async (event) => {
 });
 
 // Function to load and display all submitted questions
-function loadQuestions() {
+async function loadQuestions() {
   const questionsList = document.getElementById("questionsList");
   questionsList.innerHTML = ''; // Clear existing list
 
-  // Fetch all questions from Firestore
-  db.collection("questions")
-    .orderBy("timestamp", "desc") // Optionally, order by timestamp
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const question = doc.data().question;
-        const li = document.createElement("li");
-        li.textContent = question;
-        questionsList.appendChild(li);
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching questions: ", error);
+  try {
+    // Fetch all questions from Firestore
+    const q = query(collection(db, "questions"), orderBy("timestamp", "desc"));
+    const querySnapshot = await getDocs(q);
+    
+    querySnapshot.forEach((doc) => {
+      const question = doc.data().question;
+      const li = document.createElement("li");
+      li.textContent = question;
+      questionsList.appendChild(li);
     });
+  } catch (error) {
+    console.error("Error fetching questions: ", error);
+  }
 }
 
 // Load questions when the page loads
