@@ -55,27 +55,45 @@ const firebaseConfig = {
     })
   })
 
+// Get the form and input elements
+const questionForm = document.getElementById('questionForm');
+const questionInput = document.getElementById('question');
+const submitButton = document.getElementById('submit');
 
-const submitQuestion = async (question) => {
+// Add event listener to handle form submission
+questionForm.addEventListener('submit', async (event) => {
+  event.preventDefault(); // Prevent the default form submission
+
+  const question = questionInput.value.trim(); // Get the value of the question input
+
+  if (!question) {
+    alert('Please enter a question!');
+    return;
+  }
+
   try {
-    const response = await fetch("https://tutor-site.netlify.app/.netlify/functions/submit-question
-", {
-      method: "POST", // Ensure the HTTP method is POST
+    // Send the question data to the Netlify function
+    const response = await fetch('https://tutor-site.netlify.app/.netlify/functions/submit-question', {
+      method: 'POST', // Ensure the HTTP method is POST
       headers: {
-        "Content-Type": "application/json", // Set the content type as JSON
+        'Content-Type': 'application/json', // Set the content type as JSON
       },
       body: JSON.stringify({ question }), // Send the question in the body of the request
     });
 
+    // Handle response
     if (response.ok) {
       const result = await response.json();
-      console.log(result.message); // "Question submitted successfully!"
+      console.log('Question submitted successfully:', result.message);
+      alert('Your question has been submitted successfully!');
     } else {
       const error = await response.json();
-      console.error("Error submitting question:", error.message);
+      console.error('Error submitting question:', error.message);
+      alert('There was an error submitting your question.');
     }
   } catch (error) {
-    console.error("Error submitting question:", error);
+    console.error('Error submitting question:', error);
+    alert('There was an error with the network. Please try again later.');
   }
-};
+});
 
