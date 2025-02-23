@@ -1,41 +1,59 @@
-app.post("/submit-question", async (req, res) => {
-  try {
-    console.log("Received request to /submit-question");
+// functions/submit-question.js
 
-    const { question } = req.body;
-    console.log("Received question:", question);
+const nodemailer = require("nodemailer");
+
+exports.handler = async function (event, context) {
+  // Check if the request is a POST
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ message: "Method Not Allowed" }),
+    };
+  }
+
+  try {
+    const { question } = JSON.parse(event.body);
 
     if (!question || question.trim() === "") {
-      console.log("No question provided or question is empty");
-      return res.status(400).send({ message: "No question provided" });
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "No question provided" }),
+      };
     }
 
-    // Add question to the in-memory array (for demo purposes)
-    const newQuestion = {
-      id: Date.now(),
-      question,
-    };
-    questions.push(newQuestion);
+    // Set up email transporter using nodemailer
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,  // Use environment variables
+        pass: process.env.EMAIL_PASS,  // Use environment variables
+      },
+    });
 
-    // Send email to each user in the array
+    const usersForNotifications = ["user1@example.com", "user2@example.com"]; // Example, replace with actual list
+
+    // Send email to each user in the list
     for (let email of usersForNotifications) {
       const mailOptions = {
-        from: "no-reply@yourdomain.com", // Your email address
-        to: email, // Send to each user's email
+        from: "no-reply@yourdomain.com", // Your email
+        to: email,
         subject: "New Homework Question Submitted",
         text: `A new homework question has been submitted:\n\n${question}`,
       };
 
-      console.log("Sending email to", email);
-      const info = await transporter.sendMail(mailOptions);
-      console.log("Email sent successfully to", email, ":", info.response);
+      await transporter.sendMail(mailOptions);
     }
 
-    res.status(200).send({ message: "Question submitted successfully!" });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Question submitted successfully!" }),
+    };
   } catch (error) {
     console.error("Error during request processing:", error);
-    res
-      .status(500)
-      .send({ message: "Failed to send email", error: error.message });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Failed to send email", error: error.message }),
+    };
   }
-});
+};
+
