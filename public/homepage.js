@@ -161,8 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Submitting question:", question);
 
       try {
-        const response = await fetch("https://lilalin808.github.io/.netlify/functions/submit-question
-", {
+        const response = await fetch("https://lilalin808.github.io/.netlify/functions/submit-question", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
