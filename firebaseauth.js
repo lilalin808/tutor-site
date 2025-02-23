@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', (event) => { // Import the functions you need from the SDKs you need
  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
  import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
  import{getFirestore, setDoc, doc} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"
@@ -11,6 +10,7 @@ document.addEventListener('DOMContentLoaded', (event) => { // Import the functio
     messagingSenderId: "677806357185",
     appId: "1:677806357185:web:be5149be7ba68343517240"
  };
+
 
  // Initialize Firebase
  const app = initializeApp(firebaseConfig);
@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', (event) => { // Import the functio
     event.preventDefault();
     const email=document.getElementById('rEmail').value;
     const password=document.getElementById('rPassword').value;
-   
+    const firstName=document.getElementById('fName').value;
+    const lastName=document.getElementById('lName').value;
+
     const auth=getAuth();
     const db=getFirestore();
 
@@ -37,8 +39,9 @@ document.addEventListener('DOMContentLoaded', (event) => { // Import the functio
     .then((userCredential)=>{
         const user=userCredential.user;
         const userData={
-            email: email
-           
+            email: email,
+            firstName: firstName,
+            lastName:lastName
         };
         showMessage('Account Created Successfully', 'signUpMessage');
         const docRef=doc(db, "users", user.uid);
@@ -86,4 +89,3 @@ document.addEventListener('DOMContentLoaded', (event) => { // Import the functio
         }
     })
  })
- });
