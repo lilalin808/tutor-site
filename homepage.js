@@ -1,8 +1,24 @@
+// Initialize Firebase before calling any Firebase services
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
+  authDomain: "peer-tutor-a1076.firebaseapp.com",
+  projectId: "peer-tutor-a1076",
+  storageBucket: "peer-tutor-a1076.firebasestorage.app",
+  messagingSenderId: "677806357185",
+  appId: "1:677806357185:web:be5149be7ba68343517240"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);  // Ensure db is initialized using the app instance
+
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Initialize Firebase
-const db = getFirestore();
 const auth = getAuth();
 
 // Function to show messages to the user
