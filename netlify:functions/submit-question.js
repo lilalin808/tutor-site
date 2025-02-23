@@ -30,7 +30,6 @@ exports.handler = async function (event, context) {
       },
     });
 
-    const usersForNotifications = ["user1@example.com", "user2@example.com"]; // Example, replace with actual list
 
     // Send email to each user in the list
     for (let email of usersForNotifications) {
