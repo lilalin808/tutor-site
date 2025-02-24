@@ -15,7 +15,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebas
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
 
- const getEmails=document.getElementById('submitSignUp');
+ const getEmails=document.getElementById('notifications');
  signUp.addEventListener('click', (event)=>{
     event.preventDefault();
     const email=document.getElementById('rEmail').value;
