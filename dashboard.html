@@ -11,17 +11,19 @@
      
       <label for="email">Enter your email to receive notifications:</label>
       <div id="notifications">
-      <form method="post" action="">
-      
-      
-        <div class="input-group">
-            <i class="fas fa-envelope"></i>
-            <input type="email"  id="email" placeholder="Email" required>
-            <label for="email">Email</label>
-        </div>
-      
-       <button class="btn" id="submitEmail" >Submit</button>
-      </form>
+        <form>
+  <label for="email">Email:</label>
+  <input type="email" id="email" required>
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" required>
+
+  <button type="button" id="submitEmail">Create Account</button>
+</form>
+
+<div id="signUpMessage" style="display:none;"></div>
+
+
       </div>
     <div class="container">
       <h1>Tutor Dashboard</h1>
