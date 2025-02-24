@@ -26,54 +26,6 @@ const db = getFirestore(app); // Firestore instance
 const auth = getAuth(); // Auth instance
 
 // Function to show messages to the user
-function showMessage(message, divId) {
-  const messageDiv = document.getElementById(divId);
-  messageDiv.style.display = "block";
-  messageDiv.innerHTML = message;
-  messageDiv.style.opacity = 1;
-  setTimeout(function () {
-    messageDiv.style.opacity = 0;
-  }, 5000);
-}
-
-// Handle question submission
-const questionForm = document.getElementById('questionForm');
-questionForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  
-  const questionText = document.getElementById('question').value.trim();
-
-  // Make sure the question is not empty
-  if (!questionText) {
-    showMessage('Please enter a valid question.', 'questionMessage');
-    return;
-  }
-
-  try {
-    // Get current user (so we can associate the question with their user ID)
-    const user = auth.currentUser;
-    if (!user) {
-      showMessage('You need to be logged in to submit a question.', 'questionMessage');
-      return;
-    }
-
-    // Save question to Firestore
-    const docRef = await addDoc(collection(db, "questions"), {
-      question: questionText,
-      userId: user.uid, // Associate the question with the logged-in user
-      timestamp: new Date()
-    });
-
-    showMessage('Question submitted successfully!', 'questionMessage');
-    document.getElementById('question').value = ''; // Clear the input field
-
-    // Optionally, reload the list of questions (if you want to display them right away)
-    loadQuestions();
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    showMessage('Error submitting question.', 'questionMessage');
-  }
-});
 
 // Function to load and display all submitted questions
 async function loadQuestions() {
