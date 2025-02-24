@@ -1,93 +1,100 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+// Initialize Firebase before calling any Firebase services
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
+ 
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
+    authDomain: "peer-tutor-a1076.firebaseapp.com",
+    projectId: "peer-tutor-a1076",
+    storageBucket: "peer-tutor-a1076.firebasestorage.app",
+    messagingSenderId: "677806357185",
+    appId: "1:677806357185:web:c74d94070bf86997517240"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
 // Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
-  authDomain: "peer-tutor-a1076.firebaseapp.com",
-  projectId: "peer-tutor-a1076",
-  storageBucket: "peer-tutor-a1076.firebasestorage.app",
-  messagingSenderId: "677806357185",
-  appId: "1:677806357185:web:a8a6d253fd16ad8d517240"
-};
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);  // Firebase Auth instance
-const db = getFirestore(app);  // Firestore instance
+const db = getFirestore(app); // Firestore instance
+const auth = getAuth(); // Auth instance
 
- function showMessage(message, divId){
-    var messageDiv=document.getElementById(divId);
-    messageDiv.style.display="block";
-    messageDiv.innerHTML=message;
-    messageDiv.style.opacity=1;
-    setTimeout(function(){
-        messageDiv.style.opacity=0;
-    },5000);
- }
- const signUp=document.getElementById('submitSignUp');
- signUp.addEventListener('click', (event)=>{
-    event.preventDefault();
-    const email=document.getElementById('rEmail').value;
-    const password=document.getElementById('rPassword').value;
-    const firstName=document.getElementById('fName').value;
-    const lastName=document.getElementById('lName').value;
+// Function to show messages to the user
+function showMessage(message, divId) {
+  const messageDiv = document.getElementById(divId);
+  messageDiv.style.display = "block";
+  messageDiv.innerHTML = message;
+  messageDiv.style.opacity = 1;
+  setTimeout(function () {
+    messageDiv.style.opacity = 0;
+  }, 5000);
+}
 
-    const auth=getAuth();
-    const db=getFirestore();
+// Handle question submission
+const questionForm = document.getElementById('questionForm');
+questionForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+  const questionText = document.getElementById('question').value.trim();
 
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential)=>{
-        const user=userCredential.user;
-        const userData={
-            email: email,
-            firstName: firstName,
-            lastName:lastName
-        };
-        showMessage('Account Created Successfully', 'signUpMessage');
-        const docRef=doc(db, "users", user.uid);
-        setDoc(docRef,userData)
-        .then(()=>{
-            window.location.href='index.html';
-        })
-        .catch((error)=>{
-            console.error("error writing document", error);
+  // Make sure the question is not empty
+  if (!questionText) {
+    showMessage('Please enter a valid question.', 'questionMessage');
+    return;
+  }
 
-        });
-    })
-    .catch((error)=>{
-        const errorCode=error.code;
-        if(errorCode=='auth/email-already-in-use'){
-            showMessage('Email Address Already Exists !!!', 'signUpMessage');
-        }
-        else{
-            showMessage('unable to create User', 'signUpMessage');
-        }
-    })
- });
+  try {
+    // Get current user (so we can associate the question with their user ID)
+    const user = auth.currentUser;
+    if (!user) {
+      showMessage('You need to be logged in to submit a question.', 'questionMessage');
+      return;
+    }
 
- const signIn=document.getElementById('submitSignIn');
- signIn.addEventListener('click', (event)=>{
-    event.preventDefault();
-    const email=document.getElementById('email').value;
-    const password=document.getElementById('password').value;
-    const auth=getAuth();
+    // Save question to Firestore
+    const docRef = await addDoc(collection(db, "questions"), {
+      question: questionText,
+      userId: user.uid, // Associate the question with the logged-in user
+      timestamp: new Date()
+    });
 
-    signInWithEmailAndPassword(auth, email,password)
-    .then((userCredential)=>{
-        showMessage('login is successful', 'signInMessage');
-        const user=userCredential.user;
-        localStorage.setItem('loggedInUserId', user.uid);
-        window.location.href='homepage.html';
-    })
-    .catch((error)=>{
-        const errorCode=error.code;
-        if(errorCode==='auth/invalid-credential'){
-            showMessage('Incorrect Email or Password', 'signInMessage');
-        }
-        else{
-            showMessage('Account does not Exist', 'signInMessage');
-        }
-    })
- })
+    showMessage('Question submitted successfully!', 'questionMessage');
+    document.getElementById('question').value = ''; // Clear the input field
+
+    // Optionally, reload the list of questions (if you want to display them right away)
+    loadQuestions();
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    showMessage('Error submitting question.', 'questionMessage');
+  }
+});
+
+// Function to load and display all submitted questions
+async function loadQuestions() {
+  const questionsList = document.getElementById("questionsList");
+  questionsList.innerHTML = ''; // Clear existing list
+
+  try {
+    // Fetch all questions from Firestore
+    const q = query(collection(db, "questions"), orderBy("timestamp", "desc"));
+    const querySnapshot = await getDocs(q);
+    
+    querySnapshot.forEach((doc) => {
+      const question = doc.data().question;
+      const li = document.createElement("li");
+      li.textContent = question;
+      questionsList.appendChild(li);
+    });
+  } catch (error) {
+    console.error("Error fetching questions: ", error);
+  }
+}
+
+// Load questions when the page loads
+loadQuestions();
