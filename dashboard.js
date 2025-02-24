@@ -1,21 +1,16 @@
-const saveEmail = async (email) => {
-  const response = await fetch("/.netlify/functions/save-email", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }), // Sending email in request body
-  });
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  if (response.ok) {
-    const result = await response.json();
-    console.log(result.message); // "Email saved successfully!"
-  } else {
-    const error = await response.json();
-    console.error("Error saving email:", error.message);
-  }
-};
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
+    authDomain: "peer-tutor-a1076.firebaseapp.com",
+    projectId: "peer-tutor-a1076",
+    storageBucket: "peer-tutor-a1076.firebasestorage.app",
+    messagingSenderId: "677806357185",
+    appId: "1:677806357185:web:a8a6d253fd16ad8d517240"
+  };
 
-// Example usage
-const email = "example@domain.com"; // This would be dynamically gathered from your form
-saveEmail(email);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
