@@ -31,7 +31,7 @@ onAuthStateChanged(auth, (user) => {
 
 // Function to check if the user is an admin
 function checkIfAdmin(email) {
-  const adminEmail = "admin@example.com";  // Replace this with your admin email
+  const adminEmail = "lilalanlin@icloud.com";  // Replace this with your admin email
   if (email !== adminEmail) {
     alert("You are not an admin.");
     window.location.href = "index.html";  // Redirect if the user is not an admin
