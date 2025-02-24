@@ -1,16 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tutor Dashboard</title>
- <script type="module" src="dashboard.js"></script>  
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
     
-    <h2>Submitted Questions !</h2>
+    <script type="module" src="dashboard.js"></script>
+</head>
+<body>
+    <div class="container">
+      <h1>Homework Help</h1>
+      <form id="questionForm">
+        <label for="question">Enter your homework question:</label>
+        <textarea id="question" name="question" rows="4" required></textarea>
+        <button type="submit" id="submit">Submit Question</button>
+      </form>
+    </div>
+    <h2>Submitted Questions</h2>
     <!-- For displaying the user's own questions -->
-   
+    <p>my questions</p>
     
    
     <script src="dashboard.js"></script>
