@@ -51,12 +51,19 @@ assignRoleForm.addEventListener('submit', async (event) => {
   }
 
   try {
-    const userDocRef = doc(db, "users", email);  // Assuming emails are used as document IDs
-    const userSnapshot = await getDoc(userDocRef);
+    // Query the users collection using the email (you'll need to store emails as a field)
+    const usersRef = db.collection("users");
+    const snapshot = await usersRef.where("email", "==", email).get();
 
-    if (userSnapshot.exists()) {
-      // User exists, assign the role
-      await setDoc(doc(db, "userRoles", email), { role });
+    if (!snapshot.empty) {
+      // Assume we found the user and get the user ID
+      const userDoc = snapshot.docs[0];
+      const userId = userDoc.id; // UID from Firestore
+
+      // Now assign the role in another collection
+      await db.collection("userRoles").doc(userId).set({
+        role: role,
+      });
 
       showMessage(`Role of ${role} assigned to ${email} successfully.`, "adminMessage");
     } else {
@@ -67,6 +74,8 @@ assignRoleForm.addEventListener('submit', async (event) => {
     showMessage("Error assigning role. Please try again.", "adminMessage");
   }
 });
+
+
 
 // Function to display messages to the admin
 function showMessage(message, divId) {
