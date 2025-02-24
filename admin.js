@@ -2,14 +2,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/fireba
  import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
  import{getFirestore, setDoc, doc} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"
  
- const firebaseConfig = {
- apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
-    authDomain: "peer-tutor-a1076.firebaseapp.com",
-    projectId: "peer-tutor-a1076",
-    storageBucket: "peer-tutor-a1076.firebasestorage.app",
-    messagingSenderId: "677806357185",
-    appId: "1:677806357185:web:be5149be7ba68343517240"
- };
+const firebaseConfig = {
+  apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
+  authDomain: "peer-tutor-a1076.firebaseapp.com",
+  projectId: "peer-tutor-a1076",
+  storageBucket: "peer-tutor-a1076.firebasestorage.app",
+  messagingSenderId: "677806357185",
+  appId: "1:677806357185:web:be5149be7ba68343517240"
+};
 
 
  // Initialize Firebase
