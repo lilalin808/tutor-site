@@ -1,32 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    
-    <script type="module" src="dashboard.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutor Dashboard</title>
+  <script type="module" src="dashboard.js"></script>
 </head>
 <body>
-    <div class="container">
-      <h1>Homework Help</h1>
-     
+  <div class="container">
+    <h1>Tutor Dashboard</h1>
+    <div>
+      <h2>Submitted Questions</h2>
+      <ul id="questionsList"></ul>
     </div>
-    
-    <h2>Submitted Questions</h2>
-    <!-- For displaying the user's own questions -->
-   
-    
-   
-    <script src="dashboard.js"></script>
-    <div>Email: <span id="loggedUserEmail"></span></div>
-    <button id="logout">Logout</button>
+  </div>
 
-   
-
-<div id="questionMessage" style="display:none;"></div>
-
-<ul id="questionsList"></ul>
-
+  <!-- Display message after actions like submit -->
+  <div id="questionMessage" style="display:none;"></div>
 </body>
 </html>
