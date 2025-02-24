@@ -6,39 +6,78 @@
     <title>Tutor Dashboard</title>
     <link rel="stylesheet" href="styles/style.css" />
   </head>
-  <body>
-    <div id="notification-settings">
-     
-      <label for="email">Enter your email to receive notifications:</label>
-      <div id="notifications">
-        <form>
-  <label for="email">Email:</label>
-  <input type="email" id="email" required>
-
-  <label for="password">Password:</label>
-  <input type="password" id="password" required>
-
-  <button type="button" id="submitEmail">Create Account</button>
-</form>
-
-<div id="signUpMessage" style="display:none;"></div>
-
-
+<body>
+    <div class="container" id="signup" style="display:none;">
+      <h1 class="form-title">Register</h1>
+      <form method="post" action="">
+        <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+      
+      
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email"  id="rEmail" placeholder="Email" required>
+            <label for="rEmail">Email</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="rPassword"  placeholder="Password" required>
+            <label for="rPassword">Password</label>
+        </div>
+       <button class="btn" id="submitSignUp" >Sign Up</button>
+      </form>
+      <p class="or">
+        ----------or--------
+      </p>
+    
+      <div class="links">
+        <p>Already Have Account ?</p>
+        <button id="signInButton">Sign In</button>
       </div>
-    <div class="container">
-      <h1>Tutor Dashboard</h1>
     </div>
-    <h2>Questions</h2>
-    <!-- For displaying the user's own questions -->
-<ul id="questionsList"></ul>
 
-    <!-- For displaying other users' questions -->
+  <div class="container" id="signIn">
+        <h1 class="form-title">Sign In</h1>
+        <form method="post" action="">
+          <div id="signInMessage" class="messageDiv" style="display:none;"></div>
 
-    <!-- For displaying all questions on the dashboard -->
-    <div id="allQuestionsContainer"></div>
+          <div class="input-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email"  id="email" placeholder="Email" required>
+              <label for="email">Email</label>
+          </div>
+          <div class="input-group">
+              <i class="fas fa-lock"></i>
+            <input type="password" id="password"  placeholder="Password" required>
+              <label for="password">Password</label>
+          </div>
+          <p class="recover">
+            <a href="#">Recover Password</a>
+          </p>
+         <button  class="btn"  id="submitSignIn">Sign In</button>
+        </form>
+        <p class="or">
+          ----------or--------
+        </p>
+       
+        <div class="links">
+          <p>Don't have account yet?</p>
+          <button id="signUpButton">Sign Up</button>
+        </div>
+      </div>
+      <script >
+          const signUpButton=document.getElementById('signUpButton');
+const signInButton=document.getElementById('signInButton');
+const signInForm=document.getElementById('signIn');
+const signUpForm=document.getElementById('signup');
 
-    <div id="myQuestionsContainer"></div>
-
-    <script src="homepage.js"></script>
-  </body>
+signUpButton.addEventListener('click',function(){
+    signInForm.style.display="none";
+    signUpForm.style.display="block";
+})
+signInButton.addEventListener('click', function(){
+    signInForm.style.display="block";
+    signUpForm.style.display="none";
+})
+      </script>
+</body>
 </html>
