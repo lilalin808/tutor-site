@@ -15,34 +15,24 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebas
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
 
- const getEmails=document.getElementById('notifications');
- signUp.addEventListener('click', (event)=>{
+ const submitEmail=document.getElementById('submitEmail');
+ sumbitEmail.addEventListener('click', (event)=>{
     event.preventDefault();
-    const email=document.getElementById('rEmail').value;
-    const password=document.getElementById('rPassword').value;
-    const firstName=document.getElementById('fName').value;
-    const lastName=document.getElementById('lName').value;
+    const email=document.getElementById('email').value;
+    
+   
 
-    const auth=getAuth();
-    const db=getFirestore();
-
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmail(email)
     .then((userCredential)=>{
         const user=userCredential.user;
         const userData={
-            email: email,
-            firstName: firstName,
-            lastName:lastName
+            email: email
+          
         };
         showMessage('Account Created Successfully', 'signUpMessage');
         const docRef=doc(db, "users", user.uid);
         setDoc(docRef,userData)
-        .then(()=>{
-            window.location.href='index.html';
-        })
-        .catch((error)=>{
-            console.error("error writing document", error);
-
+       
         });
     })
     .catch((error)=>{
