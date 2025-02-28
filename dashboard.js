@@ -164,13 +164,21 @@ function loadReplies(questionId) {
 
 function showMessage(message, divId) {
   const messageDiv = document.getElementById(divId);
-  messageDiv.style.display = "block";
-  messageDiv.innerHTML = message;
-  messageDiv.style.opacity = 1;
-  setTimeout(function () {
-    messageDiv.style.opacity = 0;
-  }, 5000);
+
+  // Check if the messageDiv exists before modifying its properties
+  if (messageDiv) {
+    messageDiv.style.display = "block";
+    messageDiv.innerHTML = message;
+    messageDiv.style.opacity = 1;
+
+    setTimeout(function () {
+      messageDiv.style.opacity = 0;
+    }, 5000);
+  } else {
+    console.error(`Element with ID ${divId} not found. Unable to display message.`);
+  }
 }
+
 
 // Call the function to load questions when the page loads
 loadQuestions();
