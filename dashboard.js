@@ -44,7 +44,7 @@ function showMessage(message, divId) {
     .catch((error) => {
       console.error("Error fetching replies: ", error);
     });
-}
+
 
 // Load replies for a question when the page loads (pass the questionId)
 loadReplies("sampleQuestionId"); // Replace with actual question ID
