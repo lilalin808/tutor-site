@@ -29,56 +29,7 @@ function showMessage(message, divId) {
   }, 5000);
 }
 
-// Function to handle replying to a question
-const replyForm = document.getElementById('replyForm');
-replyForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  
-  const questionId = document.getElementById('questionId').value.trim();  // Get the question ID
-  const replyText = document.getElementById('replyText').value.trim();  // Get the reply text
-  
-  if (!replyText || !questionId) {
-    showMessage("Please provide a valid reply and question ID.", "replyMessage");
-    return;
-  }
 
-  try {
-    // Get current user (so we can associate the reply with their user ID)
-    const user = auth.currentUser;
-    if (!user) {
-      showMessage("You need to be logged in to reply.", "replyMessage");
-      return;
-    }
-
-    // Add the reply to the subcollection of the specific question
-    const replyRef = await addDoc(
-      collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
-      {
-        replyText: replyText,
-        userId: user.uid,  // Associate the reply with the logged-in user
-        timestamp: new Date()
-      }
-    );
-
-    showMessage("Reply submitted successfully!", "replyMessage");
-    document.getElementById('replyText').value = ''; // Clear the input field
-
-    // Optionally, reload replies or questions (if you want to display them right away)
-    loadReplies(questionId);
-  } catch (e) {
-    console.error("Error adding reply: ", e);
-    showMessage('Error submitting reply.', 'replyMessage');
-    repliesList.appendChild(li);  // Add each reply to the repliesList
-questionElement.appendChild(repliesList);  // Add the replies list to the question element
-
-  }
-});
-
-// Function to load replies for a specific question
-function loadReplies(questionId) {
-  const repliesList = document.getElementById("repliesList");
-  repliesList.innerHTML = ''; // Clear existing replies
-  
   // Fetch all replies from Firestore (subcollection of the question document)
   const repliesRef = collection(db, "questions", questionId, "replies");
   getDocs(repliesRef)
@@ -146,6 +97,44 @@ async function loadQuestions() {
   <button type="submit">Submit Reply</button>
 `;
 
+      // Add event listener to the form when it is created
+      replyForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const questionId = document.getElementById('questionId').value.trim(); // Get the question ID
+        const replyText = document.getElementById('replyText').value.trim(); // Get the reply text
+
+        if (!replyText || !questionId) {
+          showMessage("Please provide a valid reply and question ID.", "replyMessage");
+          return;
+        }
+
+        try {
+          const user = auth.currentUser;
+          if (!user) {
+            showMessage("You need to be logged in to reply.", "replyMessage");
+            return;
+          }
+
+          // Add the reply to the subcollection of the specific question
+          const replyRef = await addDoc(
+            collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
+            {
+              replyText: replyText,
+              userId: user.uid, // Associate the reply with the logged-in user
+              timestamp: new Date()
+            }
+          );
+
+          showMessage("Reply submitted successfully!", "replyMessage");
+          document.getElementById('replyText').value = ''; // Clear the input field
+
+          loadReplies(questionId);
+        } catch (e) {
+          console.error("Error adding reply: ", e);
+          showMessage('Error submitting reply.', 'replyMessage');
+        }
+      });
 
       li.appendChild(editButton);
       li.appendChild(deleteButton);
