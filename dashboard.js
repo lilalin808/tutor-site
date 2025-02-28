@@ -20,16 +20,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); // Firestore instance
 const auth = getAuth(); // Auth instance
 
-// Function to show messages to the user
-function showMessage(message, divId) {
-  const messageDiv = document.getElementById(divId);
-  messageDiv.style.display = "block";
-  messageDiv.innerHTML = message;
-  messageDiv.style.opacity = 1;
-  setTimeout(function () {
-    messageDiv.style.opacity = 0;
-  }, 5000);
-}
 
 // Function to load and display all submitted questions on the Tutor Dashboard
 async function loadQuestions() {
@@ -170,6 +160,16 @@ function loadReplies(questionId) {
     .catch((error) => {
       console.error("Error fetching replies: ", error);
     });
+}
+
+function showMessage(message, divId) {
+  const messageDiv = document.getElementById(divId);
+  messageDiv.style.display = "block";
+  messageDiv.innerHTML = message;
+  messageDiv.style.opacity = 1;
+  setTimeout(function () {
+    messageDiv.style.opacity = 0;
+  }, 5000);
 }
 
 // Call the function to load questions when the page loads
