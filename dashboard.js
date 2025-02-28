@@ -68,64 +68,13 @@ async function loadQuestions() {
         deleteQuestion(questionId);
       };
 
-      const repliesList = document.createElement("ul");
-repliesList.id = `repliesList-${questionId}`; // Add unique ID based on questionId
-
-
-      const replyForm = document.createElement("form");
-      replyForm.id="replyForm";
-  replyForm.innerHTML = `
-  <input type="text" id="replyText" placeholder="Write your reply" />
-  <input type="hidden" id="questionId" value="${questionId}" />
-  <button type="submit">Submit Reply</button>
-`;
-
-      // Add event listener to the form when it is created
-      replyForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const questionId = document.getElementById('questionId').value.trim(); // Get the question ID
-        const replyText = document.getElementById('replyText').value.trim(); // Get the reply text
-
-        if (!replyText || !questionId) {
-          showMessage("Please provide a valid reply and question ID.", "replyMessage");
-          return;
-        }
-
-        try {
-          const user = auth.currentUser;
-          if (!user) {
-            showMessage("You need to be logged in to reply.", "replyMessage");
-            return;
-          }
-
-          // Add the reply to the subcollection of the specific question
-          const replyRef = await addDoc(
-            collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
-            {
-              replyText: replyText,
-              userId: user.uid, // Associate the reply with the logged-in user
-              timestamp: new Date()
-            }
-          );
-
-          showMessage("Reply submitted successfully!", "replyMessage");
-          document.getElementById('replyText').value = ''; // Clear the input field
-
-          loadReplies(questionId);
-        } catch (e) {
-          console.error("Error adding reply: ", e);
-          showMessage('Error submitting reply.', 'replyMessage');
-        }
-      });
+     
 
       li.appendChild(editButton);
       li.appendChild(deleteButton);
-      li.appendChild(repliesList);
 
       // Append the question to the list
       questionsList.appendChild(li);
-                loadReplies(questionId);
 
     });
   } catch (error) {
