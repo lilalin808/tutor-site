@@ -131,6 +131,9 @@ async function loadQuestions() {
         deleteQuestion(questionId);
       };
 
+      const repliesList = document.createElement("div");
+      repliesList.id="repliesList";
+
       const replyForm = document.createElement("form");
       replyForm.textContent = "Reply";
 
