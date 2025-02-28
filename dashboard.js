@@ -131,8 +131,12 @@ async function loadQuestions() {
         deleteQuestion(questionId);
       };
 
+      const repliesList = document.createElement("form");
+      repliesList.textContent = "Reply";
+
       li.appendChild(editButton);
       li.appendChild(deleteButton);
+      li.appendChild(repliesList);
 
       // Append the question to the list
       questionsList.appendChild(li);
