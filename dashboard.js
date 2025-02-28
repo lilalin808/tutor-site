@@ -68,10 +68,67 @@ async function loadQuestions() {
         deleteQuestion(questionId);
       };
 
+      const replyButton = document.createElement("button");
+      replyButton.textContent = "Reply";
+      replyButton.onclick = function() {
+        // You can toggle visibility of a reply form here or open a modal
+        const replyForm = document.createElement("form");
+        replyForm.id = `replyForm-${questionId}`;
+        replyForm.innerHTML = `
+          <input type="text" id="replyText-${questionId}" placeholder="Write your reply" />
+          <input type="hidden" id="questionId-${questionId}" value="${questionId}" />
+          <button type="submit">Submit Reply</button>
+        `;
+        
+        // Add event listener to the reply form
+        replyForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          const replyText = document.getElementById(`replyText-${questionId}`).value.trim(); // Get the reply text
+          const questionId = document.getElementById(`questionId-${questionId}`).value.trim(); // Get the question ID
+
+          if (!replyText || !questionId) {
+            showMessage("Please provide a valid reply and question ID.", "replyMessage");
+            return;
+          }
+
+          try {
+            const user = auth.currentUser;
+            if (!user) {
+              showMessage("You need to be logged in to reply.", "replyMessage");
+              return;
+            }
+
+            // Add the reply to the subcollection of the specific question
+            const replyRef = await addDoc(
+              collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
+              {
+                replyText: replyText,
+                userId: user.uid, // Associate the reply with the logged-in user
+                timestamp: new Date()
+              }
+            );
+
+            showMessage("Reply submitted successfully!", "replyMessage");
+            document.getElementById(`replyText-${questionId}`).value = ''; // Clear the input field
+
+            loadReplies(questionId); // Reload replies
+          } catch (e) {
+            console.error("Error adding reply: ", e);
+            showMessage('Error submitting reply.', 'replyMessage');
+          }
+        });
+
+        // Append the reply form to the question list item (li)
+        li.appendChild(replyForm);
+      };
+
      
 
       li.appendChild(editButton);
       li.appendChild(deleteButton);
+      li.appendChild(replyButton); // Append the Reply button
+
 
       // Append the question to the list
       questionsList.appendChild(li);
