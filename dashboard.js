@@ -2,6 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebas
 import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import { addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -28,26 +30,6 @@ function showMessage(message, divId) {
     messageDiv.style.opacity = 0;
   }, 5000);
 }
-
-
-  // Fetch all replies from Firestore (subcollection of the question document)
-  const repliesRef = collection(db, "questions", questionId, "replies");
-  getDocs(repliesRef)
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const reply = doc.data().replyText;
-        const li = document.createElement("li");
-        li.textContent = reply;
-        repliesList.appendChild(li);
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching replies: ", error);
-    });
-
-
-// Load replies for a question when the page loads (pass the questionId)
-loadReplies("sampleQuestionId"); // Replace with actual question ID
 
 // Function to load and display all submitted questions on the Tutor Dashboard
 async function loadQuestions() {
@@ -86,8 +68,9 @@ async function loadQuestions() {
         deleteQuestion(questionId);
       };
 
-      const repliesList = document.createElement("div");
-      repliesList.id="repliesList";
+      const repliesList = document.createElement("ul");
+repliesList.id = `repliesList-${questionId}`; // Add unique ID based on questionId
+
 
       const replyForm = document.createElement("form");
       replyForm.id="replyForm";
@@ -142,6 +125,8 @@ async function loadQuestions() {
 
       // Append the question to the list
       questionsList.appendChild(li);
+                loadReplies(questionId);
+
     });
   } catch (error) {
     console.error("Error fetching questions: ", error);
@@ -165,6 +150,27 @@ async function deleteQuestion(questionId) {
     console.error("Error deleting question: ", error);
     showMessage('Error deleting question.', 'questionMessage');
   }
+}
+
+// Function to load replies for a specific question
+function loadReplies(questionId) {
+  const repliesList = document.getElementById(`repliesList-${questionId}`);
+  repliesList.innerHTML = ''; // Clear existing replies
+  
+  // Fetch all replies from Firestore (subcollection of the question document)
+  const repliesRef = collection(db, "questions", questionId, "replies");
+  getDocs(repliesRef)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const reply = doc.data().replyText;
+        const li = document.createElement("li");
+        li.textContent = reply;
+        repliesList.appendChild(li);
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching replies: ", error);
+    });
 }
 
 // Call the function to load questions when the page loads
