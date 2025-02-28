@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
 import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+import { addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -67,6 +68,9 @@ replyForm.addEventListener('submit', async (event) => {
   } catch (e) {
     console.error("Error adding reply: ", e);
     showMessage('Error submitting reply.', 'replyMessage');
+    repliesList.appendChild(li);  // Add each reply to the repliesList
+questionElement.appendChild(repliesList);  // Add the replies list to the question element
+
   }
 });
 
@@ -135,11 +139,17 @@ async function loadQuestions() {
       repliesList.id="repliesList";
 
       const replyForm = document.createElement("form");
-      replyForm.textContent = "Reply";
+      replyForm.id="replyForm";
+  replyForm.innerHTML = `
+  <input type="text" id="replyText" placeholder="Write your reply" />
+  <input type="hidden" id="questionId" value="${questionId}" />
+  <button type="submit">Submit Reply</button>
+`;
+
 
       li.appendChild(editButton);
       li.appendChild(deleteButton);
-      li.appendChild(replyForm);
+      li.appendChild(repliesList);
 
       // Append the question to the list
       questionsList.appendChild(li);
