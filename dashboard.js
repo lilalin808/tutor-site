@@ -71,8 +71,7 @@ async function loadQuestions() {
         replyForm.id = `replyForm-${questionId}`;
         replyForm.innerHTML = `
           <input type="text" id="replyText-${questionId}" placeholder="Write your reply" />
-          <input type="hidden" id="questionId-${questionId}" value="${questionId}" />
-          <button type="submit">Submit Reply</button>
+]          <button type="submit">Submit Reply</button>
         `;
         
         // Add event listener to the reply form
@@ -80,9 +79,8 @@ async function loadQuestions() {
           event.preventDefault();
 
           const replyText = document.getElementById(`replyText-${questionId}`).value.trim(); // Get the reply text
-          const questionId = document.getElementById(`questionId-${questionId}`).value.trim(); // Get the question ID
 
-          if (!replyText || !questionId) {
+          if (!replyText) {
             showMessage("Please provide a valid reply and question ID.", "replyMessage");
             return;
           }
