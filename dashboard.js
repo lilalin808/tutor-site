@@ -50,11 +50,6 @@ async function loadQuestions() {
       const li = document.createElement("li");
       li.textContent = question;
 
-      // Optionally, add the user ID or other information
-      const questionDetails = document.createElement("div");
-      questionDetails.textContent = `Posted by user ID: ${userId}`;
-      li.appendChild(questionDetails);
-
       // Add edit/delete buttons if needed
       const editButton = document.createElement("button");
       editButton.textContent = "Edit";
