@@ -28,6 +28,72 @@ function showMessage(message, divId) {
   }, 5000);
 }
 
+// Function to handle replying to a question
+const replyForm = document.getElementById('replyForm');
+replyForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  
+  const questionId = document.getElementById('questionId').value.trim();  // Get the question ID
+  const replyText = document.getElementById('replyText').value.trim();  // Get the reply text
+  
+  if (!replyText || !questionId) {
+    showMessage("Please provide a valid reply and question ID.", "replyMessage");
+    return;
+  }
+
+  try {
+    // Get current user (so we can associate the reply with their user ID)
+    const user = auth.currentUser;
+    if (!user) {
+      showMessage("You need to be logged in to reply.", "replyMessage");
+      return;
+    }
+
+    // Add the reply to the subcollection of the specific question
+    const replyRef = await addDoc(
+      collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
+      {
+        replyText: replyText,
+        userId: user.uid,  // Associate the reply with the logged-in user
+        timestamp: new Date()
+      }
+    );
+
+    showMessage("Reply submitted successfully!", "replyMessage");
+    document.getElementById('replyText').value = ''; // Clear the input field
+
+    // Optionally, reload replies or questions (if you want to display them right away)
+    loadReplies(questionId);
+  } catch (e) {
+    console.error("Error adding reply: ", e);
+    showMessage('Error submitting reply.', 'replyMessage');
+  }
+});
+
+// Function to load replies for a specific question
+function loadReplies(questionId) {
+  const repliesList = document.getElementById("repliesList");
+  repliesList.innerHTML = ''; // Clear existing replies
+  
+  // Fetch all replies from Firestore (subcollection of the question document)
+  const repliesRef = collection(db, "questions", questionId, "replies");
+  getDocs(repliesRef)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const reply = doc.data().replyText;
+        const li = document.createElement("li");
+        li.textContent = reply;
+        repliesList.appendChild(li);
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching replies: ", error);
+    });
+}
+
+// Load replies for a question when the page loads (pass the questionId)
+loadReplies("sampleQuestionId"); // Replace with actual question ID
+
 // Function to load and display all submitted questions on the Tutor Dashboard
 async function loadQuestions() {
   const questionsList = document.getElementById("questionsList");
