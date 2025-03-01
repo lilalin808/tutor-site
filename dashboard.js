@@ -38,7 +38,7 @@ async function loadQuestions() {
       const questionId = doc.id; // Get document ID (question ID)
 
       // Create the list item to display the question
-      const li = document.createElement("li");
+      const li = document.createElement("div");
       li.textContent = question;
 
       // Add edit/delete buttons if needed
