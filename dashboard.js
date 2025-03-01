@@ -89,7 +89,7 @@ async function loadQuestions() {
             }
 
             // Add the reply to the subcollection of the specific question
-            const replyRef = await addDoc(
+             await addDoc(
               collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
               {
                 replyText: replyText,
