@@ -113,11 +113,10 @@ async function loadQuestions() {
       li.appendChild(replyForm);
        }
       };
-  li.appendChild(editButton);
+      li.appendChild(editButton);
       li.appendChild(deleteButton);
       li.appendChild(replyButton); // Append the Reply button
-      li.appendChild(repliesList); // Append the replies list container
-      // Append the question to the list
+     
       questionsList.appendChild(li);
 
       loadReplies(questionId);
