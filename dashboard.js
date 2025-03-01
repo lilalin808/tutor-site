@@ -106,17 +106,12 @@ async function loadQuestions() {
         });
 
         // Append the reply form to the question list item (li)
-      };
-
-     
-
-      li.appendChild(editButton);
+         li.appendChild(editButton);
       li.appendChild(deleteButton);
       li.appendChild(replyButton); // Append the Reply button
       li.appendChild(repliesList); // Append the replies list container
       li.appendChild(replyForm);
-
-
+      };
 
       // Append the question to the list
       questionsList.appendChild(li);
