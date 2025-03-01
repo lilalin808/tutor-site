@@ -41,18 +41,9 @@ async function loadQuestions() {
       const li = document.createElement("div");
       li.textContent = question;
 
-      // Add edit/delete buttons if needed
-      const editButton = document.createElement("button");
-      editButton.textContent = "Edit";
-      editButton.onclick = function() {
-        editQuestion(questionId);
-      };
-      
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.onclick = function() {
-        deleteQuestion(questionId);
-      };
+
+       li.appendChild(deleteButton);
+
 
       const repliesList = document.createElement("div");
       repliesList.id = `repliesList-${questionId}`;
@@ -114,8 +105,7 @@ async function loadQuestions() {
       li.appendChild(replyForm);
        }
       };
-      li.appendChild(editButton);
-      li.appendChild(deleteButton);
+     
       li.appendChild(replyButton); // Append the Reply button
      
       questionsList.appendChild(li);
@@ -130,23 +120,7 @@ async function loadQuestions() {
   }
 }
 
-// Function to edit the question (e.g., for the tutor)
-function editQuestion(questionId) {
-  // You can implement the edit functionality here
-  alert(`Editing question with ID: ${questionId}`);
-}
 
-// Function to delete the question
-async function deleteQuestion(questionId) {
-  try {
-    await deleteDoc(doc(db, "questions", questionId));
-    showMessage('Question deleted successfully.', 'questionMessage');
-    loadQuestions(); // Reload questions after deletion
-  } catch (error) {
-    console.error("Error deleting question: ", error);
-    showMessage('Error deleting question.', 'questionMessage');
-  }
-}
 
 // Function to load replies for a specific question
 function loadReplies(questionId) {
