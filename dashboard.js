@@ -42,7 +42,6 @@ async function loadQuestions() {
       li.textContent = question;
 
 
-       li.appendChild(deleteButton);
 
 
       const repliesList = document.createElement("div");
