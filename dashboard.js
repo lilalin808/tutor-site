@@ -53,6 +53,9 @@ async function loadQuestions() {
         deleteQuestion(questionId);
       };
 
+      const repliesList = document.createElement("div");
+      repliesList.id = "repliesList-" + questionId;
+
       const replyButton = document.createElement("button");
       replyButton.textContent = "Reply";
       replyButton.onclick = function() {
@@ -145,7 +148,11 @@ async function deleteQuestion(questionId) {
 function loadReplies(questionId) {
   const repliesList = document.getElementById(`repliesList-${questionId}`);
   repliesList.innerHTML = ''; // Clear existing replies
-  
+
+  if (!repliesList) {
+    console.error("Replies list element not found.");
+    return;
+  }
   // Fetch all replies from Firestore (subcollection of the question document)
   const repliesRef = collection(db, "questions", questionId, "replies");
   getDocs(repliesRef)
