@@ -112,6 +112,7 @@ async function loadQuestions() {
       li.appendChild(replyButton); // Append the Reply button
       li.appendChild(repliesList); // Append the replies list container
       li.appendChild(replyForm);
+       }
       };
 
       // Append the question to the list
