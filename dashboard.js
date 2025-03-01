@@ -54,7 +54,7 @@ async function loadQuestions() {
       };
 
       const repliesList = document.createElement("div");
-      repliesList.id = "repliesList-"+questionId;
+      repliesList.id = `repliesList-${questionId}`;
 
       const replyButton = document.createElement("button");
       replyButton.textContent = "Reply";
@@ -114,10 +114,15 @@ async function loadQuestions() {
       li.appendChild(editButton);
       li.appendChild(deleteButton);
       li.appendChild(replyButton); // Append the Reply button
+      li.appendChild(repliesList); // Append the replies list container
+
 
 
       // Append the question to the list
       questionsList.appendChild(li);
+
+      loadReplies(questionId);
+
 
     });
   } catch (error) {
@@ -147,12 +152,13 @@ async function deleteQuestion(questionId) {
 // Function to load replies for a specific question
 function loadReplies(questionId) {
   const repliesList = document.getElementById(`repliesList-${questionId}`);
-  repliesList.innerHTML = ''; // Clear existing replies
 
   if (!repliesList) {
     console.error("Replies list element not found.");
     return;
   }
+
+  repliesList.innerHTML = ''; // Clear existing replies
   // Fetch all replies from Firestore (subcollection of the question document)
   const repliesRef = collection(db, "questions", questionId, "replies");
   getDocs(repliesRef)
