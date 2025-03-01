@@ -159,6 +159,8 @@ function loadReplies(questionId) {
   repliesList.innerHTML = ''; // Clear existing replies
   // Fetch all replies from Firestore (subcollection of the question document)
   const repliesRef = collection(db, "questions", questionId, "replies");
+    const q = query(repliesRef, orderBy("timestamp", "asc"));
+
   getDocs(repliesRef)
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
