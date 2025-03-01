@@ -60,12 +60,13 @@ async function loadQuestions() {
       replyButton.textContent = "Reply";
       replyButton.onclick = function() {
         // You can toggle visibility of a reply form here or open a modal
-        const replyForm = document.createElement("form");
-        replyForm.id = `replyForm-${questionId}`;
-        replyForm.innerHTML = `
-          <input type="text" id="replyText-${questionId}" placeholder="Write your reply" />
-]          <button type="submit">Submit Reply</button>
-        `;
+       if (!document.getElementById(`replyForm-${questionId}`)) {
+          const replyForm = document.createElement("form");
+          replyForm.id = `replyForm-${questionId}`;
+          replyForm.innerHTML = `
+            <input type="text" id="replyText-${questionId}" placeholder="Write your reply" />
+            <button type="submit">Submit Reply</button>
+          `;
         
         // Add event listener to the reply form
         replyForm.addEventListener('submit', async (event) => {
