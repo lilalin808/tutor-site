@@ -55,6 +55,8 @@ async function loadQuestions() {
 
       const repliesList = document.createElement("div");
       repliesList.id = `repliesList-${questionId}`;
+            li.appendChild(repliesList);
+
 
       const replyButton = document.createElement("button");
       replyButton.textContent = "Reply";
