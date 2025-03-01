@@ -54,7 +54,7 @@ async function loadQuestions() {
       };
 
       const repliesList = document.createElement("div");
-      repliesList.id = `repliesList-${questiondId}`;
+      repliesList.id = `repliesList-`+questiondId;
 
       const replyButton = document.createElement("button");
       replyButton.textContent = "Reply";
