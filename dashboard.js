@@ -3,6 +3,7 @@ import { getFirestore, collection, getDocs, orderBy, query } from "https://www.g
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import { addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+import { Timestamp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 
 // Your web app's Firebase configuration
@@ -94,7 +95,7 @@ async function loadQuestions() {
               {
                 replyText: replyText,
                 userId: user.uid, // Associate the reply with the logged-in user
-                timestamp: new Date()
+                timestamp: Timestamp.now()
               }
             );
 
