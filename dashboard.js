@@ -166,14 +166,55 @@ function loadReplies(questionId) {
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const reply = doc.data().replyText;
+        const replyId = doc.id; // Get the document ID for the reply (used for deletion)
+        const replyUserId = doc.data().userId; // Get the userId of the reply
+        
         const li = document.createElement("li");
         li.textContent = reply;
+        // Create a delete button for the reply
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+
+        const user = auth.currentUser; // Get the current authenticated user
+        if (user && user.uid === replyUserId) {
+          // Only show the delete button if the user is the author of the reply
+          deleteButton.onclick = function() {
+            deleteReply(questionId, replyId);
+          };
+          
+          // Append the delete button to the list item
+          li.appendChild(deleteButton);
+        } else {
+          // Hide the delete button if the user is not the author
+          deleteButton.style.display = "none";
+        }
+        
         repliesList.appendChild(li);
       });
     })
     .catch((error) => {
       console.error("Error fetching replies: ", error);
     });
+}
+
+// Function to delete a specific reply
+async function deleteReply(questionId, replyId) {
+  try {
+    // Get the reference to the reply document
+    const replyRef = doc(db, "questions", questionId, "replies", replyId);
+    
+    // Delete the reply document
+    await deleteDoc(replyRef);
+    
+    // Show success message
+    showMessage("Reply deleted successfully.", "replyMessage");
+    
+    // Reload the replies after deletion
+    loadReplies(questionId); 
+  } catch (error) {
+    console.error("Error deleting reply: ", error);
+    showMessage('Error deleting reply.', 'replyMessage');
+  }
 }
 
 function showMessage(message, divId) {
