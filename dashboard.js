@@ -162,7 +162,7 @@ function loadReplies(questionId) {
   const repliesRef = collection(db, "questions", questionId, "replies");
     const q = query(repliesRef, orderBy("timestamp", "asc"));
 
-  getDocs(repliesRef)
+  getDocs(q)
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const reply = doc.data().replyText;
