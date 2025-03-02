@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
@@ -62,10 +62,13 @@ assignRoleForm.addEventListener('submit', async (event) => {
       const userDoc = snapshot.docs[0];
       const userId = userDoc.id; // UID from Firestore
 
-      const userRef = doc(db, "users", userId); // Reference to the user's document
-
+      const documentRef = doc(db, "users", userId); // Reference to the user's document
+  const data = {
+    role: role,
+    email: email
+  };
       // Now assign the role in another collection
-      await setDoc(doc(db, "user", userId), {
+      await setDoc(doc(documentRef, data), {
         role: role,
       });
 
