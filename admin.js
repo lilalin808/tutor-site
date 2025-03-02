@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
- import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
- import{getFirestore, setDoc, doc} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"
- import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmS3PF33c4BHzgjKuM0LUSu_wpIFQSNvk",
@@ -54,7 +53,9 @@ assignRoleForm.addEventListener('submit', async (event) => {
   try {
     // Query the users collection using the email (you'll need to store emails as a field)
     const usersRef = db.collection("users");
-    const snapshot = await usersRef.where("email", "==", email).get();
+    const q = query(usersRef, where("email", "==", email));  // Use query() with where() to filter by email
+
+    const snapshot = await getDocs(q);
 
     if (!snapshot.empty) {
       // Assume we found the user and get the user ID
@@ -62,7 +63,7 @@ assignRoleForm.addEventListener('submit', async (event) => {
       const userId = userDoc.id; // UID from Firestore
 
       // Now assign the role in another collection
-      await db.collection("userRoles").doc(userId).set({
+      await setDoc(doc(db, "userRoles", userId), {
         role: role,
       });
 
@@ -75,8 +76,6 @@ assignRoleForm.addEventListener('submit', async (event) => {
     showMessage("Error assigning role. Please try again.", "adminMessage");
   }
 });
-
-
 
 // Function to display messages to the admin
 function showMessage(message, divId) {
