@@ -62,15 +62,12 @@ assignRoleForm.addEventListener('submit', async (event) => {
       const userDoc = snapshot.docs[0];
       const userId = userDoc.id; // UID from Firestore
 
-      const documentRef = doc(db, "users", userId); // Reference to the user's document
-  const data = {
-    role: role,
-    email: email
-  };
-      // Now assign the role in another collection
-      await setDoc(doc(documentRef, data), {
-        role: role,
+      const userRef = doc(db, "users", userId); // Reference to the user's document
+  // Now assign the role directly in the user's document
+      await updateDoc(userRef, {
+        role: role,  // Update the role field
       });
+     
 
       showMessage(`Role of ${role} assigned to ${email} successfully.`, "adminMessage");
     } else {
