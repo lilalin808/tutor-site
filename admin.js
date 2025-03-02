@@ -52,7 +52,7 @@ assignRoleForm.addEventListener('submit', async (event) => {
 
   try {
     // Query the users collection using the email (you'll need to store emails as a field)
-    const usersRef = db.collection("users");
+    const usersRef = collection(db,"users");
     const q = query(usersRef, where("email", "==", email));  // Use query() with where() to filter by email
 
     const snapshot = await getDocs(q);
