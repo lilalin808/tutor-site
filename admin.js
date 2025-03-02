@@ -65,7 +65,7 @@ assignRoleForm.addEventListener('submit', async (event) => {
       const userRef = doc(db, "users", userId); // Reference to the user's document
 
       // Now assign the role in another collection
-      await setDoc(doc(db, "userRoles", userId), {
+      await setDoc(doc(db, "user", userId), {
         role: role,
       });
 
