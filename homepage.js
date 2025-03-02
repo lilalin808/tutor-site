@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
 import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import { addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 import { deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 import { Timestamp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
@@ -264,5 +264,45 @@ async function deleteReply(questionId, replyId) {
     showMessage('Error deleting reply.', 'replyMessage');
   }
 }
+
+// Function to check the user's role and show the dashboard link if they are a tutor
+async function checkUserRole() {
+  const user = auth.currentUser;
+  
+  if (user) {
+    try {
+      // Fetch the user's document from Firestore to get their role
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const role = userData.role; // Assuming role is stored as 'role'
+
+        // Show or hide the "Go to Tutor Dashboard" link based on the user's role
+        const tutorDashboardLink = document.getElementById("tutorDashboardLink");
+        
+        if (role === "tutor") {
+          tutorDashboardLink.style.display = "block";  // Show the link if role is tutor
+        } else {
+          tutorDashboardLink.style.display = "none";   // Hide the link if role is not tutor
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user role: ", error);
+    }
+  } else {
+    console.log("User not authenticated.");
+  }
+}
+
+// Listen for auth state changes to check user role
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    checkUserRole(); // Check the role of the logged-in user
+  } else {
+    window.location.href = 'login.html';  // Redirect to login if user is not authenticated
+  }
+});
 
 loadQuestions();
