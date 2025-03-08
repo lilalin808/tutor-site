@@ -87,28 +87,47 @@ async function loadQuestions() {
     const q = query(collection(db, "questions"), orderBy("timestamp", "desc"));
     const querySnapshot = await getDocs(q);
     
-    querySnapshot.forEach((doc) => {
+    
+     getDocs(q)
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
       const question = doc.data().question;
      const userId = doc.data().userId;
       const questionId = doc.id; // Get document ID (question ID)
-     
+
       const li = document.createElement("div");
       li.textContent = question;
 
-     const editButton = document.createElement("button");
+       const editButton = document.createElement("button");
       editButton.textContent = "Edit";
-      editButton.onclick = function() {
+       const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+
+        const user = auth.currentUser; // Get the current authenticated user
+        if (user && user.uid === replyUserId) {
+          // Only show the delete button if the user is the author of the reply
+           editButton.onclick = function() {
         editReply(questionId);
       };
        li.appendChild(editButton);
-      
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.onclick = function() {
+
+           deleteButton.onclick = function() {
         deleteQuestion(questionId);
       };
 
        li.appendChild(deleteButton);
+        } else {
+          // Hide the delete button if the user is not the author
+          editButton.style.display = "none";
+        }
+       repliesList.appendChild(li);
+      });
+    })
+    
+   .catch((error) => {
+      console.error("Error fetching replies: ", error);
+    });
+
      
  const repliesList = document.createElement("div");
       repliesList.id = `repliesList-${questionId}`;
