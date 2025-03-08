@@ -229,7 +229,7 @@ function loadReplies(questionId) {
         deleteButton.textContent = "Delete";
 
         const user = auth.currentUser; // Get the current authenticated user
-if (user && user.uid === ReplyUserId) { // Compare with the question's userId
+if (user && user.uid === replyUserId) { // Compare with the question's userId
   // Only show the delete button if the user is the author of the question
   editButton.onclick = function() {
     editQuestion(questionId);
