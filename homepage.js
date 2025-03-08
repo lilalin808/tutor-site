@@ -87,119 +87,103 @@ async function loadQuestions() {
     const q = query(collection(db, "questions"), orderBy("timestamp", "desc"));
     const querySnapshot = await getDocs(q);
     
-    
-     getDocs(q)
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((doc) => {
       const question = doc.data().question;
-     const userId = doc.data().userId;
+      const userId = doc.data().userId;
       const questionId = doc.id; // Get document ID (question ID)
 
       const li = document.createElement("div");
       li.textContent = question;
 
-       const editButton = document.createElement("button");
+      const editButton = document.createElement("button");
       editButton.textContent = "Edit";
-       const deleteButton = document.createElement("button");
+      const deleteButton = document.createElement("button");
       deleteButton.textContent = "Delete";
 
-        const user = auth.currentUser; // Get the current authenticated user
-        if (user && user.uid === replyUserId) {
-          // Only show the delete button if the user is the author of the reply
-           editButton.onclick = function() {
-        editReply(questionId);
-      };
-       li.appendChild(editButton);
+      const user = auth.currentUser; // Get the current authenticated user
+      if (user && user.uid === replyUserId) {
+        // Only show the delete button if the user is the author of the reply
+        editButton.onclick = function() {
+          editReply(questionId);
+        };
+        li.appendChild(editButton);
 
-           deleteButton.onclick = function() {
-        deleteQuestion(questionId);
-      };
-
-       li.appendChild(deleteButton);
-        } else {
-          // Hide the delete button if the user is not the author
-          editButton.style.display = "none";
-        }
-       repliesList.appendChild(li);
-      });
-    })
-    
-   .catch((error) => {
-      console.error("Error fetching replies: ", error);
-    });
-
-     
- const repliesList = document.createElement("div");
+        deleteButton.onclick = function() {
+          deleteQuestion(questionId);
+        };
+        li.appendChild(deleteButton);
+      } else {
+        // Hide the delete button if the user is not the author
+        editButton.style.display = "none";
+      }
+      const repliesList = document.createElement("div");
       repliesList.id = `repliesList-${questionId}`;
-            li.appendChild(repliesList);
+      li.appendChild(repliesList);
 
-     const replyButton = document.createElement("button");
+      const replyButton = document.createElement("button");
       replyButton.textContent = "Reply";
       replyButton.onclick = function() {
         // You can toggle visibility of a reply form here or open a modal
-       if (!document.getElementById(`replyForm-${questionId}`)) {
+        if (!document.getElementById(`replyForm-${questionId}`)) {
           const replyForm = document.createElement("form");
           replyForm.id = `replyForm-${questionId}`;
           replyForm.innerHTML = `
             <input type="text" id="replyText-${questionId}" placeholder="Write your reply" />
             <button type="submit">Submit Reply</button>
           `;
-        
-        // Add event listener to the reply form
-        replyForm.addEventListener('submit', async (event) => {
-          event.preventDefault();
 
-          const replyText = document.getElementById(`replyText-${questionId}`).value.trim(); // Get the reply text
+          // Add event listener to the reply form
+          replyForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-          if (!replyText) {
-            showMessage("Please provide a valid reply and question ID.", "replyMessage");
-            return;
-          }
+            const replyText = document.getElementById(`replyText-${questionId}`).value.trim(); // Get the reply text
 
-         try {
-            const user = auth.currentUser;
-            if (!user) {
-              showMessage("You need to be logged in to reply.", "replyMessage");
+            if (!replyText) {
+              showMessage("Please provide a valid reply and question ID.", "replyMessage");
               return;
             }
 
-            // Add the reply to the subcollection of the specific question
-             await addDoc(
-              collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
-              {
-                replyText: replyText,
-                userId: user.uid, // Associate the reply with the logged-in user
-                timestamp: Timestamp.now()
+            try {
+              const user = auth.currentUser;
+              if (!user) {
+                showMessage("You need to be logged in to reply.", "replyMessage");
+                return;
               }
-            );
 
-            showMessage("Reply submitted successfully!", "replyMessage");
-            document.getElementById(`replyText-${questionId}`).value = ''; // Clear the input field
+              // Add the reply to the subcollection of the specific question
+              await addDoc(
+                collection(db, "questions", questionId, "replies"), // Using subcollection "replies"
+                {
+                  replyText: replyText,
+                  userId: user.uid, // Associate the reply with the logged-in user
+                  timestamp: Timestamp.now()
+                }
+              );
 
-          
-            loadReplies(questionId); // Reload replies
-          } catch (e) {
-            console.error("Error adding reply: ", e);
-            showMessage('Error submitting reply.', 'replyMessage');
-          }
-        });
+              showMessage("Reply submitted successfully!", "replyMessage");
+              document.getElementById(`replyText-${questionId}`).value = ''; // Clear the input field
 
-        // Append the reply form to the question list item (li)
-      
-      li.appendChild(replyForm);
-       }
+              loadReplies(questionId); // Reload replies
+            } catch (e) {
+              console.error("Error adding reply: ", e);
+              showMessage('Error submitting reply.', 'replyMessage');
+            }
+          });
+
+          // Append the reply form to the question list item (li)
+          li.appendChild(replyForm);
+        }
       };
-     
       li.appendChild(replyButton); // Append the Reply button
-     
-      questionsList.appendChild(li);
-           loadReplies(questionId);
 
+      questionsList.appendChild(li);
+      loadReplies(questionId);
     });
   } catch (error) {
     console.error("Error fetching questions: ", error);
   }
 }
+
 
 function editQuestion(questionId) {
   // You can implement the edit functionality here
