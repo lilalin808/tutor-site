@@ -229,17 +229,20 @@ function loadReplies(questionId) {
         deleteButton.textContent = "Delete";
 
         const user = auth.currentUser; // Get the current authenticated user
-        if (user && user.uid === replyUserId) {
-          // Only show the delete button if the user is the author of the reply
-          deleteButton.onclick = function() {
-            deleteReply(questionId, replyId);
-          };
-          
-          // Append the delete button to the list item
-          li.appendChild(deleteButton);
-        } else {
-          // Hide the delete button if the user is not the author
-          deleteButton.style.display = "none";
+if (user && user.uid === userId) { // Compare with the question's userId
+  // Only show the delete button if the user is the author of the question
+  editButton.onclick = function() {
+    editQuestion(questionId);
+  };
+  li.appendChild(editButton);
+
+  deleteButton.onclick = function() {
+    deleteQuestion(questionId);
+  };
+  li.appendChild(deleteButton);
+} else {
+  // Hide the delete button if the user is not the author
+  editButton.style.display = "none";
         }
        repliesList.appendChild(li);
       });
